@@ -1,0 +1,77 @@
+LOCAL OLLAMA MM-RAG RUN CHECKLIST
+=================================
+
+This folder is a separate clone of the original project.
+The original project is unchanged and uses OpenAI.
+This clone uses local Ollama for embeddings and chat generation.
+
+1. Start Ollama.
+
+   ollama serve
+
+   If Ollama is already running as a desktop service, leave it running and
+   do not start a second server.
+
+2. Download the default local models:
+
+   ollama pull llava:latest
+   ollama pull nomic-embed-text
+
+   Check installed models with:
+
+   ollama list
+
+3. Open this project directory:
+
+   cd mm-rag-local-ollama
+
+4. Create and activate a Python 3.12 environment:
+
+   uv venv env --python 3.12
+   source env/bin/activate
+
+   Windows:
+   env\Scripts\activate
+
+5. Install dependencies:
+
+   uv pip install -r requirements.txt
+
+6. Create the environment file:
+
+   cp .env.example .env
+
+7. Check .env. The important defaults are:
+
+   OLLAMA_BASE_URL=http://127.0.0.1:11434
+   OLLAMA_CHAT_MODEL=llava:latest
+   OLLAMA_EMBEDDING_MODEL=nomic-embed-text
+   QDRANT_PATH=
+   QDRANT_URL=https://your-cluster-endpoint
+   QDRANT_API_KEY=your-qdrant-api-key
+   QDRANT_COLLECTION_NAME=mm-rag-ollama
+
+   No OPENAI_API_KEY is required.
+
+8. Start the application:
+
+   streamlit run ui/app.py
+
+9. In the browser:
+
+   - Upload a PDF.
+   - Wait for parsing and Qdrant indexing to finish.
+   - Ask a question about the PDF.
+   - Review the answer and source pages.
+
+TESSERACT
+---------
+Tesseract is optional for normal text PDFs. Without it, scanned pages and
+text inside images will not be OCR'd.
+
+TROUBLESHOOTING
+---------------
+If port 11434 is unavailable, start Ollama.
+If a model is missing, run: ollama pull <model-name>
+Qdrant vectors are stored locally in data/qdrant by default.
+If there is a vector dimension mismatch, use a new collection name in .env.
